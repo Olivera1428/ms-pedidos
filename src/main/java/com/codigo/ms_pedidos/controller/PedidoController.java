@@ -1,57 +1,72 @@
-package com.codigo.ms_pedidos.controller;
+package com.codigo.ms_productos.controller;
 
-import com.codigo.ms_pedidos.dto.ActualizarEstadoDto;
-import com.codigo.ms_pedidos.dto.PedidoRequestDto;
-import com.codigo.ms_pedidos.dto.PedidoResponseDto;
-import com.codigo.ms_pedidos.service.PedidoService;
+import com.codigo.ms_productos.dto.ProductoRequestDto;
+import com.codigo.ms_productos.dto.ProductoResponseDto;
+import com.codigo.ms_productos.service.ProductoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/pedidos")
+@RequestMapping("/api/productos")
 @RequiredArgsConstructor
-public class PedidoController {
+public class ProductoController {
 
-    private final PedidoService pedidoService;
+    private final ProductoService productoService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public PedidoResponseDto crearPedido(
-            @Valid @RequestBody PedidoRequestDto request
+    public ResponseEntity<ProductoResponseDto> crearProducto(
+            @Valid @RequestBody ProductoRequestDto request
     ) {
 
-        return pedidoService.crearPedido(request);
+        return new ResponseEntity<>(
+                productoService.crearProducto(request),
+                HttpStatus.CREATED
+        );
     }
 
     @GetMapping
-    public List<PedidoResponseDto> listarPedidos() {
+    public ResponseEntity<List<ProductoResponseDto>> listarProductos() {
 
-        return pedidoService.listarPedidos();
+        return ResponseEntity.ok(
+                productoService.listarProductos()
+        );
     }
 
     @GetMapping("/{id}")
-    public PedidoResponseDto obtenerPedidoPorId(@PathVariable Long id) {
-
-        return pedidoService.obtenerPedidoPorId(id);
-    }
-
-    @PatchMapping("/{id}/estado")
-    public PedidoResponseDto actualizarEstadoPedido(
-            @PathVariable Long id,
-            @Valid @RequestBody ActualizarEstadoDto request
+    public ResponseEntity<ProductoResponseDto> obtenerProductoPorId(
+            @PathVariable Long id
     ) {
 
-        return pedidoService.actualizarEstadoPedido(id, request);
+        return ResponseEntity.ok(
+                productoService.obtenerProductoPorId(id)
+        );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductoResponseDto> actualizarProducto(
+            @PathVariable Long id,
+            @Valid @RequestBody ProductoRequestDto request
+    ) {
+
+        return ResponseEntity.ok(
+                productoService.actualizarProducto(id, request)
+        );
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminarPedido(@PathVariable Long id) {
+    public ResponseEntity<String> eliminarProducto(
+            @PathVariable Long id
+    ) {
 
-        pedidoService.eliminarPedido(id);
+        productoService.eliminarProducto(id);
+
+        return ResponseEntity.ok(
+                "Producto eliminado correctamente"
+        );
     }
 }
